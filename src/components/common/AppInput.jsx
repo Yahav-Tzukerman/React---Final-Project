@@ -1,7 +1,9 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
 import { Form, InputGroup } from "react-bootstrap";
-import { useTheme } from "../../contexts/ThemeProvider";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+
+import { useSelector } from "react-redux";
 
 const AppInput = ({
   type = "text",
@@ -11,7 +13,11 @@ const AppInput = ({
   error,
   errorMessage,
 }) => {
-  const theme = useTheme();
+  // const theme = useTheme();
+  const reduxTheme = useSelector((state) => state.theme);
+  let theme = reduxTheme.darkMode
+    ? reduxTheme.theme.dark
+    : reduxTheme.theme.light;
   const [selected, setSelected] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
@@ -48,7 +54,7 @@ const AppInput = ({
             onClick={handleTogglePassword}
             style={{
               cursor: "pointer",
-              backgroundColor: theme.colors.textLight,
+              backgroundColor: theme.colors.background,
               borderColor: error
                 ? theme.colors.error
                 : selected
@@ -56,7 +62,11 @@ const AppInput = ({
                 : theme.colors.inputBorder,
             }}
           >
-            {showPassword ? <FaEyeSlash /> : <FaEye />}
+            {showPassword ? (
+              <FontAwesomeIcon icon={faEyeSlash} />
+            ) : (
+              <FontAwesomeIcon icon={faEye} />
+            )}
           </InputGroup.Text>
         )}
       </InputGroup>

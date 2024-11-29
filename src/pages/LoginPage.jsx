@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Container } from "react-bootstrap";
-import SignInComp from "../components/sign-in/Signin";
+import SignInComp from "../components/Signin";
 
 const LoginPage = () => {
   return (

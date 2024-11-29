@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Container, Row, Col, Card } from "react-bootstrap";
-import { useTheme } from "../contexts/ThemeProvider";
+import { useSelector } from "react-redux";
 import AppButton from "./common/AppButton";
 import AppInput from "./common/AppInput";
 import AppLabel from "./common/AppLabel";
@@ -9,16 +9,23 @@ import { Link } from "react-router-dom";
 import { validateUsername, validatePassword } from "../utils/regexValidations";
 
 const SignupComp = () => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [Username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
-  const theme = useTheme();
+  const reduxTheme = useSelector((state) => state.theme);
+  let theme = reduxTheme.darkMode
+    ? reduxTheme.theme.dark
+    : reduxTheme.theme.light;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle sign-up logic here
+    console.log("First Name:", firstName);
+    console.log("Last Name:", lastName);
     console.log("Username:", Username);
     console.log("Password:", password);
     console.log("Confirm Password:", confirmPassword);
@@ -67,6 +74,8 @@ const SignupComp = () => {
               width: "100%",
               minHeight: "60vh",
               padding: "0.2rem",
+              border: ".5px solid black",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
             }}
           >
             <Card.Body>
@@ -77,9 +86,29 @@ const SignupComp = () => {
               </Card.Title>
               <Form onSubmit={handleSubmit}>
                 <Form.Group
+                  controlId="formBasicFirstName"
                   style={{ marginTop: "4vh" }}
-                  controlId="formBasicUsername"
                 >
+                  <AppLabel text="First Name" />
+                  <AppInput
+                    type="text"
+                    placeholder="Enter First Name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="formBasicLastName">
+                  <AppLabel text="Last Name" />
+                  <AppInput
+                    type="text"
+                    placeholder="Enter Last Name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </Form.Group>
+
+                <Form.Group controlId="formBasicUsername">
                   <AppLabel text="Username" />
                   <AppInput
                     type="text"
@@ -115,9 +144,12 @@ const SignupComp = () => {
                   />
                 </Form.Group>
 
-                <Form.Group controlId="formBasicCheckbox">
+                <Form.Group
+                  controlId="formBasicCheckbox"
+                  style={{ marginTop: "3vh" }}
+                >
                   <AppCheckbox
-                    label="I agree to the terms and conditions"
+                    label="Allow other to see my orders"
                     id="agreeTerms"
                     checked={agreeTerms}
                     onChange={() => {

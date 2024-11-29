@@ -1,35 +1,37 @@
 import { Route, Routes } from "react-router-dom";
+import AppRouter from "./AppRouter";
 import { Container } from "react-bootstrap";
-import ThemeProvider, { useTheme } from "./contexts/ThemeProvider";
 import SignInComp from "./components/Signin";
 import PageNotFound from "./pages/PageNotFound";
 import SignupComp from "./components/Signup";
 // import SignUpComp from "./components/sign-up/Signup";
 // import HomeComp from "./components/home/Home";
+import LoginPage from "./pages/LoginPage";
+import AppNavbar from "./components/common/AppNavbar";
+import { useSelector } from "react-redux";
 
 const App = () => {
-  const theme = useTheme();
+  const theme = useSelector((state) => state.theme);
 
   return (
-    <ThemeProvider>
-      <Container
-        fluid
-        style={{
-          background: theme.colors.gradientBackground,
-          color: theme.colors.textLight,
-          fontFamily: theme.fontFamily,
-          minHeight: "100vh",
-        }}
-      >
-        <Routes>
-          <Route path="/signin" element={<SignInComp />} />
-          <Route path="/signup" element={<SignupComp />} />
-          <Route path="*" element={<PageNotFound />} />
-          {/* <Route path="/sign-up" component={SignUpComp} />
-          <Route path="/" component={HomeComp} exact /> */}
-        </Routes>
-      </Container>
-    </ThemeProvider>
+    <Container
+      fluid
+      style={{
+        background: theme.darkMode
+          ? theme.theme.dark.colors.gradientBackground
+          : theme.theme.light.colors.gradientBackground,
+        color: theme.darkMode
+          ? theme.theme.dark.colors.textLight
+          : theme.theme.light.colors.textLight,
+        fontFamily: theme.darkMode
+          ? theme.theme.dark.colors.fontFamily
+          : theme.theme.light.colors.fontFamily,
+        minHeight: "100vh",
+      }}
+    >
+      <AppNavbar />
+      <AppRouter />
+    </Container>
   );
 };
 

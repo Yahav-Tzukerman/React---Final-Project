@@ -1,9 +1,13 @@
 import React from "react";
 import { Button as BootstrapButton } from "react-bootstrap";
-import { useTheme } from "../../contexts/ThemeProvider";
+import { useSelector } from "react-redux";
+// import { useTheme } from "../../contexts/ThemeProvider";
 
 const AppButton = ({ label, onClick, disabled, variant = "primary" }) => {
-  const theme = useTheme();
+  const reduxTheme = useSelector((state) => state.theme);
+  let theme = reduxTheme.darkMode
+    ? reduxTheme.theme.dark
+    : reduxTheme.theme.light;
 
   return (
     <BootstrapButton

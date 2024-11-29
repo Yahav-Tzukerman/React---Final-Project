@@ -7,13 +7,17 @@ import AppLabel from "./common/AppLabel";
 import AppCheckbox from "./common/AppCheckBox";
 import { Link } from "react-router-dom";
 import { validateUsername, validatePassword } from "../utils/regexValidations";
+import { useSelector } from "react-redux";
 
 const SignInComp = () => {
   const [Username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState([]);
   const [rememberMe, setRememberMe] = useState(false);
-  const theme = useTheme();
+  const reduxTheme = useSelector((state) => state.theme);
+  let theme = reduxTheme.darkMode
+    ? reduxTheme.theme.dark
+    : reduxTheme.theme.light;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,18 +30,18 @@ const SignInComp = () => {
   const onUsernameChange = (e) => {
     setUsername(e.target.value);
     if (validateUsername(e.target.value)) {
-      setError("");
+      setErrors(errors.filter((err) => err !== "Username"));
     } else {
-      setError("Username");
+      setErrors([...errors, "Username"]);
     }
   };
 
   const onPasswordChange = (e) => {
     setPassword(e.target.value);
     if (validatePassword(e.target.value)) {
-      setError("");
+      setErrors(errors.filter((err) => err !== "password"));
     } else {
-      setError("password");
+      setErrors([...errors, "password"]);
     }
   };
 
@@ -56,6 +60,8 @@ const SignInComp = () => {
               width: "100%",
               minHeight: "50vh",
               padding: "0.2rem",
+              border: ".5px solid black",
+              boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
             }}
           >
             <Card.Body>
@@ -75,7 +81,9 @@ const SignInComp = () => {
                     placeholder="Enter Username"
                     value={Username}
                     onChange={onUsernameChange}
-                    error={error.match(/Username/i)}
+                    error={
+                      errors.filter((err) => err === "Username").length > 0
+                    }
                     errorMessage="Username is invalid"
                   />
                 </Form.Group>
@@ -87,12 +95,17 @@ const SignInComp = () => {
                     placeholder="Password"
                     value={password}
                     onChange={onPasswordChange}
-                    error={error.match(/password/i)}
+                    error={
+                      errors.filter((err) => err === "password").length > 0
+                    }
                     errorMessage="Password is invalid"
                   />
                 </Form.Group>
 
-                <Form.Group controlId="formBasicCheckbox">
+                <Form.Group
+                  controlId="formBasicCheckbox"
+                  style={{ marginTop: "3vh" }}
+                >
                   <AppCheckbox
                     label="Remember me"
                     id="rememberMe"

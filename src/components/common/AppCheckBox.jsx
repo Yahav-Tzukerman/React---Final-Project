@@ -1,9 +1,12 @@
 import React from "react";
 import { Form } from "react-bootstrap";
-import { useTheme } from "../../contexts/ThemeProvider";
+import { useSelector } from "react-redux";
 
 const AppCheckbox = ({ label, id, checked, onChange }) => {
-  const theme = useTheme();
+  const reduxTheme = useSelector((state) => state.theme);
+  let theme = reduxTheme.darkMode
+    ? reduxTheme.theme.dark
+    : reduxTheme.theme.light;
 
   return (
     <Form.Group className="mb-3" style={{ margin: "0.2rem" }}>
@@ -14,7 +17,6 @@ const AppCheckbox = ({ label, id, checked, onChange }) => {
           onChange={onChange}
           isValid={false}
           className="shadow-none"
-
         />
         <Form.Check.Label
           style={{
