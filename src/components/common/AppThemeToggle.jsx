@@ -6,10 +6,8 @@ import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
 
 const AppThemeToggle = () => {
   const dispatch = useDispatch();
-  const reduxTheme = useSelector((state) => state.theme);
-  const theme = reduxTheme.darkMode
-    ? reduxTheme.theme.dark
-    : reduxTheme.theme.light;
+  const app = useSelector((state) => state.app);
+  const theme = app.darkMode ? app.theme.dark : app.theme.light;
 
   const handleThemeToggle = () => {
     dispatch({ type: "TOGGLE_THEME" });
@@ -21,7 +19,7 @@ const AppThemeToggle = () => {
         type="switch"
         id="theme-switch"
         onChange={handleThemeToggle}
-        checked={reduxTheme.darkMode}
+        checked={app.darkMode}
         label=""
         style={{
           paddingLeft: "4.4rem",
@@ -31,7 +29,7 @@ const AppThemeToggle = () => {
       <span
         style={{
           position: "absolute",
-          left: "0.5rem",
+          right: "0.4rem",
           top: "50%",
           transform: "translateY(-50%)",
           color: theme.colors.textLight,
@@ -39,13 +37,13 @@ const AppThemeToggle = () => {
       >
         <FontAwesomeIcon
           icon={faSun}
-          style={{ visibility: reduxTheme.darkMode ? "hidden" : "visible" }}
+          style={{ visibility: app.darkMode ? "hidden" : "visible" }}
         />
       </span>
       <span
         style={{
           position: "absolute",
-          right: "0.5rem",
+          right: "0.4rem",
           top: "50%",
           transform: "translateY(-50%)",
           color: theme.colors.textLight,
@@ -53,7 +51,7 @@ const AppThemeToggle = () => {
       >
         <FontAwesomeIcon
           icon={faMoon}
-          style={{ visibility: reduxTheme.darkMode ? "visible" : "hidden" }}
+          style={{ visibility: app.darkMode ? "visible" : "hidden" }}
         />
       </span>
     </Form>

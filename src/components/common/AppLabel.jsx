@@ -4,10 +4,8 @@ import { useSelector } from "react-redux";
 // import { useTheme } from "../../contexts/ThemeProvider";
 
 const AppLabel = ({ text }) => {
-  const reduxTheme = useSelector((state) => state.theme);
-  let theme = reduxTheme.darkMode
-    ? reduxTheme.theme.dark
-    : reduxTheme.theme.light;
+  const app = useSelector((state) => state.app);
+  const theme = app.darkMode ? app.theme.dark : app.theme.light;
 
   return (
     <Form.Label

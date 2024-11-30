@@ -9,6 +9,8 @@ import { Link } from "react-router-dom";
 import { validateUsername, validatePassword } from "../utils/regexValidations";
 
 const SignupComp = () => {
+  const app = useSelector((state) => state.app);
+  const theme = app.darkMode ? app.theme.dark : app.theme.light;
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [Username, setUsername] = useState("");
@@ -16,10 +18,6 @@ const SignupComp = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
-  const reduxTheme = useSelector((state) => state.theme);
-  let theme = reduxTheme.darkMode
-    ? reduxTheme.theme.dark
-    : reduxTheme.theme.light;
 
   const handleSubmit = (e) => {
     e.preventDefault();

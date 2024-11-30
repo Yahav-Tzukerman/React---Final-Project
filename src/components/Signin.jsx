@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Container, Row, Col, Card } from "react-bootstrap";
-import { useTheme } from "../contexts/ThemeProvider";
+// import { useTheme } from "../contexts/ThemeProvider";
 import AppButton from "./common/AppButton";
 import AppInput from "./common/AppInput";
 import AppLabel from "./common/AppLabel";
@@ -10,14 +10,12 @@ import { validateUsername, validatePassword } from "../utils/regexValidations";
 import { useSelector } from "react-redux";
 
 const SignInComp = () => {
+  const app = useSelector((state) => state.app);
+  const theme = app.darkMode ? app.theme.dark : app.theme.light;
   const [Username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState([]);
   const [rememberMe, setRememberMe] = useState(false);
-  const reduxTheme = useSelector((state) => state.theme);
-  let theme = reduxTheme.darkMode
-    ? reduxTheme.theme.dark
-    : reduxTheme.theme.light;
 
   const handleSubmit = (e) => {
     e.preventDefault();

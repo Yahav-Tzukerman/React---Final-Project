@@ -14,10 +14,8 @@ const AppInput = ({
   errorMessage,
 }) => {
   // const theme = useTheme();
-  const reduxTheme = useSelector((state) => state.theme);
-  let theme = reduxTheme.darkMode
-    ? reduxTheme.theme.dark
-    : reduxTheme.theme.light;
+  const app = useSelector((state) => state.app);
+  const theme = app.darkMode ? app.theme.dark : app.theme.light;
   const [selected, setSelected] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 

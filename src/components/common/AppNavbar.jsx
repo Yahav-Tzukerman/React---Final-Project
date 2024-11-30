@@ -1,18 +1,17 @@
 import React from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import AppThemeToggle from "./AppThemeToggle";
 
 const AppNavbar = () => {
-  const reduxTheme = useSelector((state) => state.theme);
-  let theme = reduxTheme.darkMode
-    ? reduxTheme.theme.dark
-    : reduxTheme.theme.light;
+  const app = useSelector((state) => state.app);
+  const theme = app.darkMode ? app.theme.dark : app.theme.light;
 
   return (
     <Navbar
       bg={theme.colors.gradientBackground}
-      variant={reduxTheme.darkMode ? "dark" : "light"}
+      variant={app.darkMode ? "dark" : "light"}
       expand="lg"
       style={{
         width: "100%",
@@ -27,11 +26,24 @@ const AppNavbar = () => {
         <Navbar.Collapse
           id="basic-navbar-nav"
           className="justify-content-center"
-          style={{ width: "100%", marginRight: "10rem" }}
+          style={{ width: "100%", marginRight: "13rem" }}
         >
-          <Nav className="mx-auto">
-            <Nav.Link href="/home">Home</Nav.Link>
-            <Nav.Link href="link">Link</Nav.Link>
+          <Nav className="mx-auto" style={{ gap: "0.5rem" }}>
+            {/* <Link to="/">Home</Link> */}
+            <Nav.Link
+              as={Link}
+              to="/"
+              style={{ color: "grey", textDecoration: "none" }}
+            >
+              Home
+            </Nav.Link>
+            <Nav.Link
+              as={Link}
+              to="/link"
+              style={{ color: "grey", textDecoration: "none" }}
+            >
+              Link
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
         <AppThemeToggle />

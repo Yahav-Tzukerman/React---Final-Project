@@ -3,10 +3,8 @@ import { Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
 const AppCheckbox = ({ label, id, checked, onChange }) => {
-  const reduxTheme = useSelector((state) => state.theme);
-  let theme = reduxTheme.darkMode
-    ? reduxTheme.theme.dark
-    : reduxTheme.theme.light;
+  const app = useSelector((state) => state.app);
+  const theme = app.darkMode ? app.theme.dark : app.theme.light;
 
   return (
     <Form.Group className="mb-3" style={{ margin: "0.2rem" }}>
