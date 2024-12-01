@@ -14,6 +14,7 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       thunk: false, // Disable thunk since we're using saga
+      serializableCheck: false, // Disable serializable state invariant middleware
     }).concat(sagaMiddleware),
   preloadedState: persistedState, // Initialize with persisted state
 });

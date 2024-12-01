@@ -6,22 +6,37 @@ import { useSelector } from "react-redux";
 const AppButton = ({ label, onClick, disabled, variant = "primary" }) => {
   const app = useSelector((state) => state.app);
   const theme = app.darkMode ? app.theme.dark : app.theme.light;
+  const backgroundColor =
+    variant === "primary"
+      ? theme.colors.primary
+      : variant === "error"
+      ? theme.colors.error
+      : variant === "warning"
+      ? theme.colors.warning
+      : variant === "update"
+      ? theme.colors.update
+      : theme.colors.textMuted;
+
+  const hoverColor =
+    variant === "primary"
+      ? theme.colors.hover
+      : variant === "error"
+      ? theme.colors.errorHover
+      : variant === "warning"
+      ? theme.colors.warningHover
+      : variant === "update"
+      ? theme.colors.updateHover
+      : theme.colors.textMuted;
 
   return (
     <BootstrapButton
       onClick={onClick}
-      onMouseEnter={(e) =>
-        (e.target.style.backgroundColor = theme.colors.hover)
-      }
-      onMouseLeave={(e) =>
-        (e.target.style.backgroundColor =
-          variant === "primary" ? theme.colors.primary : theme.colors.textMuted)
-      }
+      onMouseEnter={(e) => (e.target.style.backgroundColor = hoverColor)}
+      onMouseLeave={(e) => (e.target.style.backgroundColor = backgroundColor)}
       disabled={disabled}
       style={{
-        backgroundColor:
-          variant === "primary" ? theme.colors.primary : theme.colors.textMuted,
         color: theme.colors.buttonText,
+        backgroundColor: backgroundColor,
         borderColor:
           variant === "primary" ? theme.colors.primary : theme.colors.textMuted,
         borderRadius: theme.button.borderRadius,
