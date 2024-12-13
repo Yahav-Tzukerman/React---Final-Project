@@ -11,13 +11,48 @@ export const loadState = () => {
   }
 };
 
-export const saveState = ({ app }) => {
+export const saveState = ({ app, auth }) => {
   try {
     const serializedState = JSON.stringify({
-      app,
+      app, // Save the `app` slice
+      auth, // Save the `auth` slice
     });
     localStorage.setItem("appState", serializedState);
   } catch (err) {
     console.error("Could not save state", err);
+  }
+};
+
+export const clearState = () => {
+  try {
+    localStorage.removeItem("appState"); // Clear the saved state
+  } catch (err) {
+    console.error("Failed to clear state from localStorage:", err);
+  }
+};
+
+export const saveAuthToLocalStorage = (user) => {
+  try {
+    localStorage.setItem("auth", JSON.stringify(user));
+  } catch (err) {
+    console.error("Failed to save auth to localStorage:", err);
+  }
+};
+
+export const loadAuthFromLocalStorage = () => {
+  try {
+    const userData = localStorage.getItem("auth");
+    return userData ? JSON.parse(userData) : null;
+  } catch (err) {
+    console.error("Failed to load auth from localStorage:", err);
+    return null;
+  }
+};
+
+export const clearAuthFromLocalStorage = () => {
+  try {
+    localStorage.removeItem("auth");
+  } catch (err) {
+    console.error("Failed to clear auth from localStorage:", err);
   }
 };

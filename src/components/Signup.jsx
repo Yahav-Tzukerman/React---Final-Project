@@ -15,10 +15,11 @@ import UserService from "../services/users.service";
 import { serverTimestamp } from "firebase/firestore";
 import AppErrorPopUp from "../components/common/AppErrorPopApp";
 import { useNavigate } from "react-router-dom";
+import appTheme from "../styles/theme";
 
 const SignupComp = () => {
   const app = useSelector((state) => state.app);
-  const theme = app.darkMode ? app.theme.dark : app.theme.light;
+  const theme = app.darkMode ? appTheme.dark : appTheme.light;
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -77,7 +78,7 @@ const SignupComp = () => {
     const user = {
       firstName: formData.firstName,
       lastName: formData.lastName,
-      Username: formData.username,
+      username: formData.username,
       password: formData.password,
       agreeTerms: formData.agreeTerms,
       createdAt: serverTimestamp(),
@@ -85,6 +86,7 @@ const SignupComp = () => {
     };
 
     const response = await UserService.addUser(user);
+
     console.log("Response: ", response);
 
     if (response?.error) {
@@ -225,7 +227,13 @@ const SignupComp = () => {
               >
                 Sign Up
               </Card.Title>
-              <Form onSubmit={handleSubmit}>
+              <Form
+                onSubmit={handleSubmit}
+                onKeyDown={(e) => {
+                  e.key === "Enter" ? handleSubmit(e) : null;
+                  e.key === "Escape" ? handleCloseErrorPopup(e) : null;
+                }}
+              >
                 <Form.Group
                   controlId="formBasicFirstName"
                   style={{ marginTop: "4vh" }}

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Toast } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import AppButton from "./AppButton";
+import appTheme from "../../styles/theme";
 
 const AppErrorPopApp = ({
   handleClose = () => {},
@@ -10,7 +11,7 @@ const AppErrorPopApp = ({
   variant = "error",
 }) => {
   const app = useSelector((state) => state.app);
-  const theme = app.darkMode ? app.theme.dark : app.theme.light;
+  const theme = app.darkMode ? appTheme.dark : appTheme.light;
   const variantColor =
     variant === "error"
       ? theme.colors.error

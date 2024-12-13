@@ -7,30 +7,63 @@ import AppLabel from "./common/AppLabel";
 import AppCheckbox from "./common/AppCheckBox";
 import { Link } from "react-router-dom";
 import { validateUsername, validatePassword } from "../utils/regexValidations";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import UserService from "../services/users.service";
+import { setLoading, setUser } from "../redux/authSlice";
+import appTheme from "../styles/theme";
+import { auth } from "../firebase/firebase";
 
 const SignInComp = () => {
   const app = useSelector((state) => state.app);
-  const theme = app.darkMode ? app.theme.dark : app.theme.light;
-  const [Username, setUsername] = useState("");
+  const theme = app.darkMode ? appTheme.dark : appTheme.light;
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState([]);
   const [rememberMe, setRememberMe] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle sign-in logic here
-    console.log("Username:", Username);
-    console.log("Password:", password);
-    console.log("Remember Me:", rememberMe);
+    dispatch(setLoading(true)); // Start loading state
+    try {
+      const response = await UserService.login(username, password);
+      const token = await auth.currentUser.getIdToken(); // Get Firebase token
+      console.log(token);
+      if (response.error) {
+        // setError(response.error.message);
+      }
+
+      const userData = {
+        ...response.data,
+        token: token,
+      };
+
+      // Save user data (with role) to Redux
+      dispatch(setUser(userData));
+
+      // Navigate based on role
+      if (response.data.role === "admin") {
+        navigate("/admin/categories");
+      } else if (response.data.role === "customer") {
+        navigate("/customer");
+      } else {
+        navigate("/");
+      }
+    } catch (err) {
+      // setError("Failed to login. Please try again.");
+    } finally {
+      dispatch(setLoading(false)); // Stop loading state
+    }
   };
 
   const onUsernameChange = (e) => {
     setUsername(e.target.value);
     if (validateUsername(e.target.value)) {
-      setErrors(errors.filter((err) => err !== "Username"));
+      setErrors(errors.filter((err) => err !== "username"));
     } else {
-      setErrors([...errors, "Username"]);
+      setErrors([...errors, "username"]);
     }
   };
 
@@ -68,19 +101,25 @@ const SignInComp = () => {
               >
                 Sign in
               </Card.Title>
-              <Form onSubmit={handleSubmit}>
+              <Form
+                onSubmit={handleSubmit}
+                onKeyDown={(e) => {
+                  e.key === "Enter" ? handleSubmit(e) : null;
+                  e.key === "Escape" ? null : null;
+                }}
+              >
                 <Form.Group
                   style={{ marginTop: "4vh" }}
                   controlId="formBasicUsername"
                 >
-                  <AppLabel text="Username" />
+                  <AppLabel text="username" />
                   <AppInput
                     type="text"
                     placeholder="Enter Username"
-                    value={Username}
+                    value={username}
                     onChange={onUsernameChange}
                     error={
-                      errors.filter((err) => err === "Username").length > 0
+                      errors.filter((err) => err === "username").length > 0
                     }
                     errorMessage="Username is invalid"
                   />

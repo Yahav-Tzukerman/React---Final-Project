@@ -5,10 +5,11 @@ import CategoryCard from "./CategoryCard";
 import CategoriesService from "../../services/categories.service";
 import AppInput from "../common/AppInput";
 import AppButton from "../common/AppButton";
+import appTheme from "../../styles/theme";
 
 const CategoriesList = () => {
   const app = useSelector((state) => state.app);
-  const theme = app.darkMode ? app.theme.dark : app.theme.light;
+  const theme = app.darkMode ? appTheme.dark : appTheme.light;
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState("");
 

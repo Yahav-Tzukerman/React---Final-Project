@@ -4,10 +4,11 @@ import { useSelector } from "react-redux";
 import AppButton from "../common/AppButton";
 import AppInput from "../common/AppInput";
 import CategoryService from "../../services/categories.service";
+import appTheme from "../../styles/theme";
 
 const CategoryCard = ({ category }) => {
   const app = useSelector((state) => state.app);
-  const theme = app.darkMode ? app.theme.dark : app.theme.light;
+  const theme = app.darkMode ? appTheme.dark : appTheme.light;
 
   const [isEditing, setIsEditing] = useState(false);
   const [newCategory, setNewCategory] = useState(category.category);

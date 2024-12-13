@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 import createSagaMiddleware from "redux-saga";
-import rootReducer from "./rootReducer";
+import rootReducer from "./rootReducer"; // Updated rootReducer with authSlice
 import rootSaga from "./sagas/appSaga";
 import { loadState, saveState } from "../utils/localStorage";
 
@@ -10,7 +10,7 @@ const sagaMiddleware = createSagaMiddleware();
 const persistedState = loadState();
 
 const store = configureStore({
-  reducer: rootReducer,
+  reducer: rootReducer, // rootReducer now includes authSlice
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       thunk: false, // Disable thunk since we're using saga
@@ -21,9 +21,14 @@ const store = configureStore({
 
 // Subscribe to store updates and save to localStorage
 store.subscribe(() => {
-  saveState(store.getState());
+  const state = store.getState();
+  saveState({
+    app: state.app,   // Save app slice
+    auth: state.auth, // Save auth slice
+  });
 });
 
+// Run saga middleware
 sagaMiddleware.run(rootSaga);
 
 export default store;

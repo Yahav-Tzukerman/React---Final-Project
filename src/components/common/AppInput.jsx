@@ -2,8 +2,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEyeSlash, faEye } from "@fortawesome/free-solid-svg-icons";
 import React, { useState, useRef } from "react";
 import { Form, InputGroup, Overlay, Tooltip } from "react-bootstrap";
-
 import { useSelector } from "react-redux";
+import appTheme from "../../styles/theme";
 
 const AppInput = ({
   type = "text",
@@ -14,9 +14,8 @@ const AppInput = ({
   errorMessage,
   instructions,
 }) => {
-  // const theme = useTheme();
   const app = useSelector((state) => state.app);
-  const theme = app.darkMode ? app.theme.dark : app.theme.light;
+  const theme = app.darkMode ? appTheme.dark : appTheme.light;
   const [selected, setSelected] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);

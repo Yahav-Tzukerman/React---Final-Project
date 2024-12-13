@@ -3,10 +3,41 @@ import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import AppThemeToggle from "./AppThemeToggle";
+import appTheme from "../../styles/theme";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRightFromBracket } from "@fortawesome/free-solid-svg-icons";
+import { auth } from "../../firebase/firebase";
+import { useState, useEffect } from "react";
+import usersService from "../../services/users.service";
 
-const AppNavbar = () => {
+const AppNavbar = ({ handleLogout }) => {
   const app = useSelector((state) => state.app);
-  const theme = app.darkMode ? app.theme.dark : app.theme.light;
+  const theme = app.darkMode ? appTheme.dark : appTheme.light;
+  const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
+  const [isValid, setIsValid] = useState(null);
+  const state = useSelector((state) => state);
+  console.log(state);
+
+  useEffect(() => {
+    const validateToken = async () => {
+      if (auth.currentUser) {
+        const token = await auth.currentUser.getIdToken(); // Validate token
+        const { data: roleFromFireBase } = await usersService.getUserRole(
+          auth.currentUser.uid
+        );
+        console.log("roleFromFireBase: ", roleFromFireBase);
+        if (user.token === token && user.role === roleFromFireBase) {
+          setIsValid(true);
+        } else {
+          setIsValid(false);
+        }
+      } else {
+        setIsValid(false);
+      }
+    };
+
+    validateToken();
+  }, [user, loading]);
 
   return (
     <Navbar
@@ -21,30 +52,76 @@ const AppNavbar = () => {
       <Container fluid>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Brand href="/" className="d-none d-lg-block">
-          Next Generation E-Commerce
+          Next Generation E-Commerce {isValid}
         </Navbar.Brand>
         <Navbar.Collapse
           id="basic-navbar-nav"
           className="justify-content-center"
           style={{ width: "100%", marginRight: "13rem" }}
         >
-          <Nav className="mx-auto" style={{ gap: "0.5rem" }}>
-            {/* <Link to="/">Home</Link> */}
-            <Nav.Link
-              as={Link}
-              to="/"
-              style={{ color: "grey", textDecoration: "none" }}
-            >
-              Home
-            </Nav.Link>
-            <Nav.Link
-              as={Link}
-              to="/link"
-              style={{ color: "grey", textDecoration: "none" }}
-            >
-              Link
-            </Nav.Link>
-          </Nav>
+          {user?.role === "admin" && (
+            <Nav className="mx-auto" style={{ gap: "0.5rem" }}>
+              <Nav.Link
+                as={Link}
+                to="/admin/categories"
+                style={{ color: "grey", textDecoration: "none" }}
+              >
+                Categories
+              </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/admin/products"
+                style={{ color: "grey", textDecoration: "none" }}
+              >
+                Products
+              </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/admin/customers"
+                style={{ color: "grey", textDecoration: "none" }}
+              >
+                Customers
+              </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/admin/statistics"
+                style={{ color: "grey", textDecoration: "none" }}
+              >
+                Statistics
+              </Nav.Link>
+            </Nav>
+          )}
+          {user?.role === "customer" && (
+            <Nav className="mx-auto" style={{ gap: "0.5rem" }}>
+              <Nav.Link
+                as={Link}
+                to="/customer/products"
+                style={{ color: "grey", textDecoration: "none" }}
+              >
+                Products
+              </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/customer/orders"
+                style={{ color: "grey", textDecoration: "none" }}
+              >
+                My Orders
+              </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/customer/account"
+                style={{ color: "grey", textDecoration: "none" }}
+              >
+                My Account
+              </Nav.Link>
+            </Nav>
+          )}
+          {isAuthenticated && (
+            <FontAwesomeIcon
+              onClick={handleLogout}
+              icon={faArrowRightFromBracket}
+            />
+          )}
         </Navbar.Collapse>
         <AppThemeToggle />
       </Container>

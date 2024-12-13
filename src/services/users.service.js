@@ -1,6 +1,8 @@
-import { db } from "../firebase/firebase";
-import { v4 as uuidv4 } from "uuid";
-import bcrypt from "bcryptjs";
+import { db, auth } from "../firebase/firebase";
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+} from "firebase/auth";
 import {
   collection,
   query,
@@ -20,7 +22,7 @@ const usersCollectionRef = collection(db, "users");
 class UserService {
   isUserExists = async (username) => {
     try {
-      const q = query(usersCollectionRef, where("Username", "==", username));
+      const q = query(usersCollectionRef, where("username", "==", username));
       console.log("q: ", q);
       const querySnapshot = await getDocs(q);
       console.log("querySnapshot: ", querySnapshot);
@@ -33,39 +35,68 @@ class UserService {
 
   addUser = async (newUser) => {
     try {
-      console.log("newUser: ", newUser);
-      const userExists = await this.isUserExists(newUser.Username);
-      console.log("userExists: ", userExists);
+      const userExists = await this.isUserExists(newUser.username);
       if (userExists) {
         return createErrorResponse("User already exists");
       }
-      const id = uuidv4();
-      const hashedPassword = await bcrypt.hash(newUser.password, 10);
+
+      const fakeEmail = `${newUser.username}@firebase.com`;
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        fakeEmail,
+        newUser.password
+      ).catch((error) => {
+        if (error === "Firebase: Error (auth/email-already-in-use).") {
+          return createErrorResponse("User already exists");
+        }
+        return createErrorResponse(error.message);
+      });
+
+      const userId = userCredential.user.uid;
+      const { password, ...userWithoutPassword } = newUser;
       const userWithRole = {
-        ...newUser,
-        password: hashedPassword,
-        role: "customer",
+        ...userWithoutPassword,
+        email: fakeEmail,
+        role: newUser.role || "customer",
       };
-      return await setDoc(doc(db, "users", id), userWithRole);
+
+      return await setDoc(doc(db, "users", userId), userWithRole);
     } catch (error) {
-      console.error("Error adding user: ", error);
       return createErrorResponse("Error adding user");
     }
   };
 
   login = async (username, password) => {
     try {
-      const q = query(usersCollectionRef, where("username", "==", username));
-      const querySnapshot = await getDocs(q);
-      if (querySnapshot.empty) {
-        return createErrorResponse("User not found");
+      const fakeEmail = `${username}@firebase.com`;
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        fakeEmail,
+        password
+      ).catch((error) => {
+        console.error("Error logging in: ", error);
+        return createErrorResponse(error);
+      });
+      console.log("userCredential: ", userCredential);
+
+      const userId = userCredential.user.uid;
+
+      // Fetch the user's role from Firestore
+      const userDoc = await getDoc(doc(db, "users", userId));
+      if (!userDoc.exists()) {
+        return createErrorResponse(`User: ${username} not found`);
       }
-      const user = querySnapshot.docs[0].data();
-      const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (!isPasswordValid) {
-        return createErrorResponse("Invalid credentials");
-      }
-      return { data: user };
+
+      const userData = userDoc.data();
+      console.log("userData - After Login: ", userData);
+      return {
+        data: {
+          userId,
+          username: userData.username,
+          token: userCredential.user.accessToken,
+          role: userData.role, // Pass the role along with the response
+        },
+      };
     } catch (error) {
       console.error("Error logging in: ", error);
       return createErrorResponse("Error logging in");

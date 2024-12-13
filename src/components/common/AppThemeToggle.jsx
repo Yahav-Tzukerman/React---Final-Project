@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+import appTheme from "../../styles/theme";
 
 const AppThemeToggle = () => {
   const dispatch = useDispatch();
   const app = useSelector((state) => state.app);
-  const theme = app.darkMode ? app.theme.dark : app.theme.light;
+  const theme = app.darkMode ? appTheme.dark : appTheme.light;
 
   const handleThemeToggle = () => {
     dispatch({ type: "TOGGLE_THEME" });
