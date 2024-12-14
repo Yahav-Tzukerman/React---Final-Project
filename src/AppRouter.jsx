@@ -7,6 +7,8 @@ import UnAuthorizedPage from "./pages/UnAuthorizedPage";
 import HomePage from "./pages/HomePage";
 import CategoriesList from "./components/admin/CategoriesList";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import CustomerTableComp from "./components/admin/CustomerTable";
+import CustomersPage from "./pages/admin/CustomersPage";
 
 const AppRouter = () => {
   return (
@@ -17,9 +19,7 @@ const AppRouter = () => {
       <Route path="/" element={<HomePage />} />
 
       {/* Admin Routes */}
-      <Route
-        path="/admin"
-      >
+      <Route path="/admin">
         <Route
           path="categories"
           element={
@@ -28,17 +28,28 @@ const AppRouter = () => {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="customers"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <CustomersPage />
+            </ProtectedRoute>
+          }
+        />
       </Route>
 
       {/* Customer Routes */}
-      <Route
-        path="/customer"
-        element={
-          <ProtectedRoute allowedRoles={["customer"]}>
-            <p>Customer Dashboard</p>
-          </ProtectedRoute>
-        }
-      />
+      <Route path="/customer">
+        <Route
+          path="products"
+          element={
+            <ProtectedRoute allowedRoles={["customer"]}>
+              <h1>Customer Products</h1>
+            </ProtectedRoute>
+          }
+        />
+      </Route>
 
       {/* Error Pages */}
       <Route path="/404" element={<PageNotFound />} />

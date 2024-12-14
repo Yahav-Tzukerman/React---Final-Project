@@ -15,9 +15,8 @@ const AppTable = ({ columns, data }) => {
       responsive
       style={{
         marginTop: "20px",
-        backgroundColor: theme.colors.tableBackground,
         color: theme.colors.textLight,
-        borderColor: theme.colors.tableBorder,
+        borderColor: theme.table.borderColor,
       }}
     >
       <thead>
@@ -27,9 +26,9 @@ const AppTable = ({ columns, data }) => {
               key={index}
               style={{
                 textAlign: "center",
-                backgroundColor: theme.colors.headerBackground,
-                color: theme.colors.headerText,
-                borderColor: theme.colors.tableBorder,
+                backgroundColor: theme.table.headerBackground,
+                color: theme.table.headerTextColor,
+                borderColor: theme.table.borderColor,
               }}
             >
               {column.header}
@@ -45,9 +44,9 @@ const AppTable = ({ columns, data }) => {
                 key={colIndex}
                 style={{
                   textAlign: "center",
-                  backgroundColor: theme.colors.rowBackground,
+                  backgroundColor: theme.table.rowBackground,
                   color: theme.colors.textLight,
-                  borderColor: theme.colors.tableBorder,
+                  borderColor: theme.table.borderColor,
                 }}
               >
                 {row[column.accessor]}

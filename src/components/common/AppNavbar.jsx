@@ -15,8 +15,6 @@ const AppNavbar = ({ handleLogout }) => {
   const theme = app.darkMode ? appTheme.dark : appTheme.light;
   const { user, isAuthenticated, loading } = useSelector((state) => state.auth);
   const [isValid, setIsValid] = useState(null);
-  const state = useSelector((state) => state);
-  console.log(state);
 
   useEffect(() => {
     const validateToken = async () => {
@@ -25,8 +23,7 @@ const AppNavbar = ({ handleLogout }) => {
         const { data: roleFromFireBase } = await usersService.getUserRole(
           auth.currentUser.uid
         );
-        console.log("roleFromFireBase: ", roleFromFireBase);
-        if (user.token === token && user.role === roleFromFireBase) {
+        if (user?.token === token && user?.role === roleFromFireBase) {
           setIsValid(true);
         } else {
           setIsValid(false);

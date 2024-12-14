@@ -1,6 +1,7 @@
 const appTheme = {
   dark: {
     colors: {
+      tableBackground: "linear-gradient(to bottom, #06101C, #0D152D)",
       gradientBackground: "linear-gradient(180deg, #0B1120 0%, #0D152D 100%)",
       inputBorderSelected: "#38bdf8",
       background: "linear-gradient(to bottom, #06101C, #0D152D)",
@@ -32,9 +33,17 @@ const appTheme = {
       padding: "10px 20px",
       fontSize: "16px",
     },
+    table: {
+      headerBackground: "#0D152D",
+      headerTextColor: "#FFFFFF",
+      rowBackground: "#06101C",
+      rowHoverBackground: "green",
+      borderColor: "#94A3B8",
+    },
   },
   light: {
     colors: {
+      tableBackground: "#F0F0F0",
       gradientBackground: "linear-gradient(180deg, #FFFFFF 0%, #F0F0F0 100%)",
       inputBorderSelected: "#38bdf8",
       background: "linear-gradient(to bottom, #FFFFFF, #F0F0F0)",
@@ -65,6 +74,13 @@ const appTheme = {
       borderRadius: "5px",
       padding: "10px 20px",
       fontSize: "16px",
+    },
+    table: {
+      headerBackground: "#F0F0F0",
+      headerTextColor: "#000000",
+      rowBackground: "#FFFFFF",
+      rowHoverBackground: "#E5E7EB",
+      borderColor: "#94A3B8",
     },
   },
 };

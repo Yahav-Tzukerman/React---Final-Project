@@ -23,12 +23,9 @@ class UserService {
   isUserExists = async (username) => {
     try {
       const q = query(usersCollectionRef, where("username", "==", username));
-      console.log("q: ", q);
       const querySnapshot = await getDocs(q);
-      console.log("querySnapshot: ", querySnapshot);
       return !querySnapshot.empty;
     } catch (error) {
-      console.error("Error checking if user exists: ", error);
       return false;
     }
   };
@@ -73,11 +70,7 @@ class UserService {
         auth,
         fakeEmail,
         password
-      ).catch((error) => {
-        console.error("Error logging in: ", error);
-        return createErrorResponse(error);
-      });
-      console.log("userCredential: ", userCredential);
+      );
 
       const userId = userCredential.user.uid;
 
@@ -88,7 +81,6 @@ class UserService {
       }
 
       const userData = userDoc.data();
-      console.log("userData - After Login: ", userData);
       return {
         data: {
           userId,
@@ -98,7 +90,12 @@ class UserService {
         },
       };
     } catch (error) {
-      console.error("Error logging in: ", error);
+      if (
+        error.message.includes("Firebase: Error (auth/invalid-credential).")
+      ) {
+        return createErrorResponse("Invalid credentials");
+      }
+
       return createErrorResponse("Error logging in");
     }
   };

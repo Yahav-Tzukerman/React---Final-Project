@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Form, Container, Row, Col, Card } from "react-bootstrap";
-// import { useTheme } from "../contexts/ThemeProvider";
 import AppButton from "./common/AppButton";
 import AppInput from "./common/AppInput";
 import AppLabel from "./common/AppLabel";
@@ -13,6 +12,7 @@ import UserService from "../services/users.service";
 import { setLoading, setUser } from "../redux/authSlice";
 import appTheme from "../styles/theme";
 import { auth } from "../firebase/firebase";
+import AppErrorPopUp from "../components/common/AppErrorPopApp";
 
 const SignInComp = () => {
   const app = useSelector((state) => state.app);
@@ -23,38 +23,56 @@ const SignInComp = () => {
   const [rememberMe, setRememberMe] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [popup, setPopup] = useState({
+    show: false,
+    message: "",
+    type: "error",
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch(setLoading(true)); // Start loading state
     try {
       const response = await UserService.login(username, password);
-      const token = await auth.currentUser.getIdToken(); // Get Firebase token
-      console.log(token);
+
       if (response.error) {
-        // setError(response.error.message);
+        setPopup({
+          ...popup,
+          message: response.error,
+          type: "error",
+          show: true,
+          variant: "error",
+        });
+        return;
       }
+
+      const token = await auth.currentUser.getIdToken(); // Get Firebase token
 
       const userData = {
         ...response.data,
         token: token,
       };
 
-      // Save user data (with role) to Redux
       dispatch(setUser(userData));
 
       // Navigate based on role
       if (response.data.role === "admin") {
         navigate("/admin/categories");
       } else if (response.data.role === "customer") {
-        navigate("/customer");
+        navigate("/customer/products");
       } else {
         navigate("/");
       }
     } catch (err) {
-      // setError("Failed to login. Please try again.");
+      setPopup({
+        ...popup,
+        message: err.message,
+        type: "error",
+        show: true,
+        variant: "error",
+      });
     } finally {
-      dispatch(setLoading(false)); // Stop loading state
+      dispatch(setLoading(false));
     }
   };
 
@@ -76,11 +94,23 @@ const SignInComp = () => {
     }
   };
 
+  const handleCloseErrorPopup = () => {
+    setPopup({ ...popup, show: false, message: "" });
+  };
+
   return (
     <Container
       className="d-flex justify-content-center align-items-center"
       style={{ minHeight: "100vh" }}
     >
+      {popup.show && (
+        <AppErrorPopUp
+          handleClose={handleCloseErrorPopup}
+          show={popup.show}
+          label={popup.message}
+          variant={popup.type}
+        />
+      )}
       <Row className="w-100">
         <Col xs={12} md={6} lg={4} className="mx-auto">
           <Card

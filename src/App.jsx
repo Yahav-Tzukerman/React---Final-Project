@@ -14,7 +14,7 @@ const App = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch({ type: "auth/initialize" });
+    dispatch({ type: "auth/initializeAuth" });
   }, [dispatch]);
 
   const handleLogout = () => {
