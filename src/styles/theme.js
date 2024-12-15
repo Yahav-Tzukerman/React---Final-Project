@@ -57,7 +57,7 @@ const appTheme = {
       buttonText: "#FFFFFF",
       error: "#DC2626",
       errorHover: "#EF4444",
-      warning: "#FBBF24",
+      warning: "#FFCA28",
       warningHover: "#FBBF24",
       update: "#198754",
       updateHover: "#22C55E",

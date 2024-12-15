@@ -15,6 +15,8 @@ const AppButton = ({ label, onClick, disabled, variant = "primary" }) => {
       ? theme.colors.warning
       : variant === "update"
       ? theme.colors.update
+      : variant === "success"
+      ? theme.colors.success
       : theme.colors.textMuted;
 
   const hoverColor =
@@ -26,6 +28,8 @@ const AppButton = ({ label, onClick, disabled, variant = "primary" }) => {
       ? theme.colors.warningHover
       : variant === "update"
       ? theme.colors.updateHover
+      : variant === "success"
+      ? theme.colors.successHover
       : theme.colors.textMuted;
 
   return (
