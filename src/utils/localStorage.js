@@ -11,11 +11,12 @@ export const loadState = () => {
   }
 };
 
-export const saveState = ({ app, auth }) => {
+export const saveState = ({ app, auth, cart }) => {
   try {
     const serializedState = JSON.stringify({
       app, // Save the `app` slice
       auth, // Save the `auth` slice
+      cart, // Save the `cart` slice
     });
     localStorage.setItem("appState", serializedState);
   } catch (err) {

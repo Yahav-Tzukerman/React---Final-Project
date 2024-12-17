@@ -25,6 +25,7 @@ store.subscribe(() => {
   saveState({
     app: state.app,   // Save app slice
     auth: state.auth, // Save auth slice
+    cart: state.cart, // Save cart slice
   });
 });
 

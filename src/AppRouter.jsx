@@ -3,12 +3,12 @@ import { Routes, Route } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import PageNotFound from "./pages/PageNotFound";
 import UnAuthorizedPage from "./pages/UnAuthorizedPage";
-import ProtectedRoute from "./utils/ProtectedRoute";
+import ProtectedRoute from "./components/ProtectedRoute";
 import CustomersPage from "./pages/admin/CustomersPage";
 import CategoriesPage from "./pages/admin/CategoriesPage";
 import SignupPage from "./pages/SignupPage";
-import CreateProductCard from "./components/admin/CreateProductCard";
-import CreateProductListComp from "./components/admin/CreateProductList";
+import AdminProductsPage from "./pages/admin/AdminProductsPage";
+import ProductsPage from "./pages/customer/ProductsPage";
 
 const AppRouter = () => {
   return (
@@ -32,7 +32,7 @@ const AppRouter = () => {
           path="products"
           element={
             <ProtectedRoute allowedRoles={["admin"]}>
-              <CreateProductListComp />
+              <AdminProductsPage />
             </ProtectedRoute>
           }
         />
@@ -53,7 +53,7 @@ const AppRouter = () => {
           path="products"
           element={
             <ProtectedRoute allowedRoles={["customer"]}>
-              <h1>Customer Products</h1>
+              <ProductsPage />
             </ProtectedRoute>
           }
         />
