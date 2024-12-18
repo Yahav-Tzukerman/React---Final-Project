@@ -1,6 +1,6 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Overlay, Tooltip, Form, InputGroup } from "react-bootstrap";
+import { Overlay, Tooltip, Form } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 import appTheme from "../../styles/theme";
@@ -17,6 +17,11 @@ const AppCounter = ({
   const [count, setCount] = useState(counter);
   const [showTooltip, setShowTooltip] = useState(false);
   const countRef = useRef(null);
+
+  // Update internal state whenever 'counter' prop changes
+  useEffect(() => {
+    setCount(counter);
+  }, [counter]);
 
   const handleDecrement = () => {
     if (count > 0) {
@@ -37,50 +42,55 @@ const AppCounter = ({
     onChange && onChange(newValue);
   };
 
-  const inputGroupStyle = {
-    display: "inline-flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    margin: "1.5rem 0.5rem",
-  };
-
-  const countStyle = {
+  // Inline media query to adjust the width on small screens
+  const responsiveCountStyle = {
     backgroundColor: theme.colors.inputBackground,
     border: "none",
     textAlign: "center",
-    width: "50px",
     color: theme.colors.textLight,
     fontFamily: theme.fontFamily,
+    width: "50px",
+    fontSize: "1rem",
   };
 
+  // For extra small screens, let's shrink the width and font size
+  const mediaQuery = `
+    @media (max-width: 576px) {
+      .responsive-counter-input {
+        width: 35px !important;
+        font-size: 0.875rem !important;
+      }
+    }
+  `;
+
   return (
-    <div style={{ display: "inline-block" }} ref={countRef}>
-      <div style={inputGroupStyle}>
+    <div className="d-inline-block" ref={countRef}>
+      {/* Injecting a <style> tag for the small screen adjustments */}
+      <style>{mediaQuery}</style>
+
+      <div className="d-inline-flex align-items-center justify-content-center my-2 mx-1">
         <AppButton
           onClick={handleDecrement}
           label={<FontAwesomeIcon icon={faMinus} />}
           variant="primary"
+          size="sm"
         />
         <Form.Control
           readOnly
           value={count}
-          style={countStyle}
-          className="shadow-none"
+          style={responsiveCountStyle}
+          className="shadow-none responsive-counter-input mx-1"
         />
         <AppButton
           onClick={handleIncrement}
           label={<FontAwesomeIcon icon={faPlus} />}
           variant="primary"
+          size="sm"
         />
       </div>
 
       <Overlay target={countRef.current} show={showTooltip} placement="bottom">
-        {(overlayProps) => (
-          <Tooltip {...overlayProps} style={{ ...overlayProps.style }}>
-            {instructions}
-          </Tooltip>
-        )}
+        {(overlayProps) => <Tooltip {...overlayProps}>{instructions}</Tooltip>}
       </Overlay>
     </div>
   );

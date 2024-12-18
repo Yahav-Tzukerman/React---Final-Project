@@ -113,13 +113,21 @@ const AppNavbar = ({ handleLogout }) => {
               </Nav.Link>
             </Nav>
           )}
-          {isAuthenticated && (
-            <FontAwesomeIcon
-              onClick={handleLogout}
-              icon={faArrowRightFromBracket}
-            />
-          )}
         </Navbar.Collapse>
+        {isAuthenticated && (
+          <FontAwesomeIcon
+            onClick={handleLogout}
+            icon={faArrowRightFromBracket}
+            style={{
+              fontSize: "1rem",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              color: theme.colors.text,
+            }}
+          />
+        )}
         <AppThemeToggle />
       </Container>
     </Navbar>

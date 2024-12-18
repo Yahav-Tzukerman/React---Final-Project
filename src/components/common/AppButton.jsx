@@ -3,9 +3,10 @@ import { Button as BootstrapButton } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import appTheme from "../../styles/theme";
 
-const AppButton = ({ label, onClick, disabled, variant = "primary" }) => {
+const AppButton = ({ label, onClick, disabled, variant = "primary", size }) => {
   const app = useSelector((state) => state.app);
   const theme = app.darkMode ? appTheme.dark : appTheme.light;
+
   const backgroundColor =
     variant === "primary"
       ? theme.colors.primary
@@ -32,6 +33,8 @@ const AppButton = ({ label, onClick, disabled, variant = "primary" }) => {
       ? theme.colors.successHover
       : theme.colors.textMuted;
 
+  const btnSizeClass = size === "sm" ? "btn-sm" : "";
+
   return (
     <BootstrapButton
       onClick={onClick}
@@ -44,12 +47,12 @@ const AppButton = ({ label, onClick, disabled, variant = "primary" }) => {
         borderColor:
           variant === "primary" ? theme.colors.primary : theme.colors.textMuted,
         borderRadius: theme.button.borderRadius,
-        padding: theme.button.padding,
-        fontSize: "1rem",
+        padding: size === "sm" ? "0.25rem 0.5rem" : theme.button.padding,
+        fontSize: size === "sm" ? "0.875rem" : "1rem",
         fontFamily: theme.fontFamily,
         cursor: disabled ? "not-allowed" : "pointer",
       }}
-      className="w-100 shadow-none"
+      className={`shadow-none ${btnSizeClass}`}
     >
       {label}
     </BootstrapButton>

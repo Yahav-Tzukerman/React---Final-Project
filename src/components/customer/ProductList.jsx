@@ -11,34 +11,24 @@ const ProductList = () => {
   const products = useProducts();
 
   return (
-    <Container style={{ marginTop: "2rem" }}>
-      <Row className="justify-content-center">
-        <div
-          style={{
-            color: theme.colors.textLight,
-            fontFamily: theme.fontFamily,
-            width: "100%",
-            minHeight: "85vh",
-            padding: "2rem",
-            marginTop: "1rem",
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-          }}
-        >
-          {products.map((product) => (
-            <Col
-              key={product.id}
-              xs={8}
-              sm={8}
-              md={8}
-              lg={8}
-              className="d-flex justify-content-center"
-            >
-              <ProductCard product={product} />
-            </Col>
-          ))}
-        </div>
+    <Container className="my-4">
+      <Row
+        className="gx-3 gy-4 justify-content-center"
+        style={{ color: theme.colors.textLight }}
+      >
+        {products.map((product) => (
+          <Col
+            key={product.id}
+            xs={12}
+            sm={12}
+            md={12}
+            lg={12}
+            xl={12}
+            className="d-flex justify-content-center"
+          >
+            <ProductCard product={product} />
+          </Col>
+        ))}
       </Row>
     </Container>
   );
