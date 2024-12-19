@@ -19,6 +19,7 @@ const App = () => {
 
   const handleLogout = () => {
     // clearState();
+    dispatch({ type: "CLEAR_CART" });
     dispatch({ type: "auth/clearUser" });
     navigate("/signin");
   };

@@ -9,6 +9,8 @@ import CategoriesPage from "./pages/admin/CategoriesPage";
 import SignupPage from "./pages/SignupPage";
 import AdminProductsPage from "./pages/admin/AdminProductsPage";
 import ProductsPage from "./pages/customer/ProductsPage";
+import OrdersPage from "./pages/customer/OrdersPage";
+import UserInfoPage from "./pages/customer/UserInfoPage";
 
 const AppRouter = () => {
   return (
@@ -54,6 +56,24 @@ const AppRouter = () => {
           element={
             <ProtectedRoute allowedRoles={["customer"]}>
               <ProductsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="orders"
+          element={
+            <ProtectedRoute allowedRoles={["customer"]}>
+              <OrdersPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="account"
+          element={
+            <ProtectedRoute allowedRoles={["customer"]}>
+              <UserInfoPage />
             </ProtectedRoute>
           }
         />

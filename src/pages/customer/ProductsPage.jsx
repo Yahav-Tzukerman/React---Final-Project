@@ -1,21 +1,26 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import appTheme from "../../styles/theme";
-import { Col, Row, Container } from "react-bootstrap";
+import { Col, Row, Container, Offcanvas } from "react-bootstrap";
 import ProductList from "../../components/customer/ProductList";
-import CartToggleComp from "../../components/cart/CartToggleButton";
 import Cart from "../../components/cart/Cart";
+import CardToggleComp from "../../components/cart/CartToggleButton";
 
 const ProductsPage = () => {
   const app = useSelector((state) => state.app);
   const theme = app.darkMode ? appTheme.dark : appTheme.light;
   const [showCart, setShowCart] = React.useState(false);
 
-  const containerStyle = {};
+  const handleCartToggle = () => setShowCart(!showCart);
+  const handleCartClose = () => setShowCart(false);
+
+  const containerStyle = {
+    width: "48%",
+  };
 
   const mediaQueryStyle = {
     "@media (max-width: 768px)": {
-      display: showCart ? "none" : "flex",
+      width: "100%",
     },
   };
 
@@ -37,47 +42,30 @@ const ProductsPage = () => {
       }}
     >
       <Container fluid className="py-4">
+        {/* Product List takes full width by default */}
         <Row>
-          {/* If cart is not open, show toggle button in a narrow column */}
-          {!showCart && (
-            <Col
-              xs={1}
-              className="d-flex justify-content-center align-items-start"
-            >
-              <CartToggleComp
-                isCartOpen={showCart}
-                onToggleCart={() => setShowCart(!showCart)}
-              />
-            </Col>
-          )}
-
-          {/* If cart is open, display it along with the toggle button */}
-          {showCart && (
-            <Col
-              xs={12}
-              md={6}
-              className="d-flex flex-column align-items-start mb-3"
-            >
-              <div className="mb-3">
-                <CartToggleComp
-                  isCartOpen={showCart}
-                  onToggleCart={() => setShowCart(!showCart)}
-                />
-              </div>
-
-              <Cart />
-            </Col>
-          )}
-
-          {/* Product List occupies remaining space */}
-          <Col
-            style={combinedStyle}
-            xs={showCart ? 12 : 11}
-            md={showCart ? 6 : 11}
-          >
+          <Col xs={12}>
             <ProductList />
           </Col>
         </Row>
+
+        <CardToggleComp isCartOpen={showCart} onToggleCart={handleCartToggle} />
+
+        {/* Offcanvas for Cart */}
+        <Offcanvas
+          show={showCart}
+          onHide={handleCartClose}
+          placement="start"
+          style={combinedStyle}
+          renderStaticNode={true}
+        >
+          <Offcanvas.Header closeButton>
+            <Offcanvas.Title>Cart</Offcanvas.Title>
+          </Offcanvas.Header>
+          <Offcanvas.Body>
+            <Cart />
+          </Offcanvas.Body>
+        </Offcanvas>
       </Container>
     </div>
   );

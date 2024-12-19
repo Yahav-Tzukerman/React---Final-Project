@@ -30,7 +30,7 @@ const CardToggleComp = ({ isCartOpen, onToggleCart }) => {
     left: isCartOpen ? "46.8%" : "0",
     transform: "translateY(-50%)",
     transition: "left 0.5s",
-    zIndex: 1000,
+    zIndex: 9999,
   };
 
   const mediaQueryStyle = {

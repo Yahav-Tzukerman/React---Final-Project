@@ -1,5 +1,5 @@
 import React from "react";
-import { Navbar, Nav, Container } from "react-bootstrap";
+import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import AppThemeToggle from "./AppThemeToggle";
@@ -110,6 +110,12 @@ const AppNavbar = ({ handleLogout }) => {
                 style={{ color: "grey", textDecoration: "none" }}
               >
                 My Account
+              </Nav.Link>
+              <Nav.Link
+                onClick={handleLogout}
+                style={{ color: "grey", textDecoration: "none" }}
+              >
+                Logout
               </Nav.Link>
             </Nav>
           )}
