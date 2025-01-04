@@ -91,6 +91,7 @@ const AppRouter = () => {
       {/* Error Pages */}
       <Route path="/404" element={<PageNotFound />} />
       <Route path="/403" element={<UnAuthorizedPage />} />
+      <Route path="/" element={<LoginPage />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
