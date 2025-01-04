@@ -2,6 +2,9 @@ import { db, auth } from "../firebase/firebase";
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  updatePassword,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
 } from "firebase/auth";
 import {
   collection,
@@ -102,13 +105,77 @@ class UserService {
   };
 
   updateUser = async (id, updatedUser) => {
+    const userDoc = doc(db, "users", id);
+    const userFromDb = await getDoc(userDoc);
+    const obj = { id: id, ...updatedUser };
     try {
-      const userDoc = doc(db, "users", id);
-      await updateDoc(userDoc, updatedUser);
+      // Update the user password in Firebase Auth
+      if (updatedUser.password) {
+        await this.updateUserPassword(
+          updatedUser.password,
+          userFromDb.data().password
+        );
+      }
+
+      await updateDoc(userDoc, obj);
       return { data: true };
     } catch (error) {
       console.error("Error updating user: ", error);
       return createErrorResponse("Error updating user");
+    }
+  };
+
+  updateUserPassword = async (newPassword, currentPassword) => {
+    try {
+      const user = auth.currentUser;
+
+      if (!user) {
+        throw new Error("No authenticated user found.");
+      }
+
+      // Fetch the user's email from Firestore
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      if (!userDoc.exists()) {
+        throw new Error("User data not found in Firestore.");
+      }
+
+      const userData = userDoc.data();
+      const email = userData.email;
+
+      // Reauthenticate the user
+      const reauthResponse = await this.reauthenticateUser(
+        email,
+        currentPassword
+      );
+      if (reauthResponse.error) {
+        return reauthResponse;
+      }
+
+      // Update the password
+      await updatePassword(user, newPassword);
+      return { data: true };
+    } catch (error) {
+      console.error("Error updating password: ", error);
+      return createErrorResponse(error.message || "Error updating password");
+    }
+  };
+
+  reauthenticateUser = async (email, password) => {
+    try {
+      const credential = EmailAuthProvider.credential(email, password);
+      const user = auth.currentUser;
+
+      if (!user) {
+        throw new Error("No authenticated user found.");
+      }
+
+      await reauthenticateWithCredential(user, credential);
+      return { data: true };
+    } catch (error) {
+      console.error("Error reauthenticating user: ", error);
+      return createErrorResponse(
+        error.message || "Error reauthenticating user"
+      );
     }
   };
 

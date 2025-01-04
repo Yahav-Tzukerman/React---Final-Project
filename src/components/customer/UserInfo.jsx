@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Form, Container, Row, Col, Card } from "react-bootstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import AppButton from "../common/AppButton";
 import AppInput from "../common/AppInput";
 import AppLabel from "../common/AppLabel";
@@ -23,6 +23,7 @@ const UserInfoComp = () => {
   const theme = app.darkMode ? appTheme.dark : appTheme.light;
   const userId = useSelector((state) => state.auth.user.userId);
   const user = useUsers().filter((user) => user.id === userId)[0];
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -101,7 +102,7 @@ const UserInfoComp = () => {
       isActive: true,
     };
 
-    const response = await UserService.updateUser(user);
+    const response = await UserService.updateUser(userId, user);
 
     if (response?.error) {
       // If error is "User already exists"
@@ -129,18 +130,9 @@ const UserInfoComp = () => {
       show: true,
     });
 
-    setFormData({
-      firstName: "",
-      lastName: "",
-      username: "",
-      password: "",
-      confirmPassword: "",
-      agreeTerms: false,
-    });
-
-    setTimeout(() => {
-      navigate("/profile");
-    }, 3000);
+    // dispatch({ type: "CLEAR_CART" });
+    // dispatch({ type: "auth/clearUser" });
+    // navigate("/signin");
   };
 
   const onUsernameChange = (e) => {
