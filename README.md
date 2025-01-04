@@ -13,6 +13,7 @@ This project is a React application enhanced with **Redux** for state management
 - [🚀 Features](#-features)
 - [⚙️ Installation](#️-installation)
 - [▶️ Usage](#️-usage)
+- [👤 Test Users](#-test-users)
 - [🔍 Key Features](#-key-features)
 - [🤝 Contributing](#-contributing)
 - [📜 License](#-license)
@@ -59,6 +60,30 @@ To run the project locally:
    ```bash
    http://localhost:5173
    ```
+
+## 👤 Test Users
+
+Use the following test users to explore the application's features:
+
+### Admin User
+
+- **Email:** `Admin`
+- **Password:** `Admin123!`
+- **Features:**
+  - Manage users and data.
+  - Access admin-specific functionality.
+  - View all records in the database.
+
+### Customer User
+
+- **Email:** `Customer`
+- **Password:** `Customer123!`
+- **Features:**
+  - View and interact with the main application.
+  - Limited access to admin features.
+  - Personalized dashboard and data.
+
+These users are pre-configured in the Firebase Authentication and Firestore database for testing purposes.
 
 ## 🔍 Key Features
 
