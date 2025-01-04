@@ -10,19 +10,28 @@ import useCategories from "../../hooks/useCategories";
 import AppTextArea from "../common/AppTextArea";
 import productsService from "../../services/products.service";
 import AppLabel from "../common/AppLabel";
+import useOrders from "../../hooks/useOrders";
 
-const CreateProductCard = ({ product }) => {
+const CreateProductCard = ({ product, showPopup }) => {
   const app = useSelector((state) => state.app);
   const theme = app.darkMode ? appTheme.dark : appTheme.light;
   const categories = useCategories();
   const categoryNames = categories.map((category) => category.category);
+  const { orders } = useOrders();
+  const orderedBy = orders.filter((order) => order.product.id === product?.id);
+  const orderedByData = orderedBy.map((order) => ({
+    name: order.user.username,
+    quantity: order.quantity,
+    date: order.date,
+  }));
 
   const [productData, setProductData] = useState({
-    title: product?.title || "",
-    price: product?.price || "",
-    category: product?.category || "",
-    imageUrl: product?.imageUrl || "",
-    description: product?.description || "",
+    title: product?.title || "Product Title",
+    price: product?.price || "1",
+    category: product?.category || "Product Category",
+    imageUrl: product?.imageUrl || "Product Image URL",
+    description: product?.description || "Product Description",
+    inStock: product?.inStock || "2500",
   });
 
   const cardStyle = {
@@ -36,6 +45,7 @@ const CreateProductCard = ({ product }) => {
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
     padding: "1rem",
     margin: "1rem",
+    maxHeight: "60vh",
   };
 
   const columns = [
@@ -44,7 +54,7 @@ const CreateProductCard = ({ product }) => {
     { header: "Date", accessor: "date" },
   ];
 
-  const data = [];
+  const data = orderedByData;
 
   const onTitleChange = (e) => {
     setProductData((prevData) => ({
@@ -82,8 +92,39 @@ const CreateProductCard = ({ product }) => {
   };
 
   const handleSaveClick = async () => {
-    const resp = await productsService.addProduct(productData);
-    console.log("Product saved:", resp);
+    if (
+      productData.title === "" ||
+      productData.title === "Product Title" ||
+      productData.price === "" ||
+      productData.imageUrl === "" ||
+      productData.imageUrl === "Product Image Url" ||
+      productData.description === "" ||
+      productData.description === "Product Description" ||
+      productData.category === "" ||
+      productData.category === "Product Category"
+    ) {
+      showPopup("Please fill in all fields", "error");
+      return;
+    }
+    if (product.id == undefined) {
+      const resp = await productsService.addProduct(productData);
+      if (resp.error) {
+        showPopup(resp.error, "error");
+      } else {
+        showPopup("Product added successfully", "success");
+      }
+    } else {
+      const resp = await productsService.updateProduct(product.id, productData);
+      if (resp.includes("Error")) {
+        showPopup(resp, "error");
+      } else {
+        showPopup("Product updated successfully", "success");
+      }
+    }
+  };
+
+  const handleCloseErrorPopup = () => {
+    setPopup({ ...popup, show: false, message: "" });
   };
 
   return (
@@ -99,6 +140,8 @@ const CreateProductCard = ({ product }) => {
                 value={productData.title}
                 onChange={onTitleChange}
                 placeholder="Enter product title"
+                error={productData.title === ""}
+                errorMessage="* Title is required"
               />
             </Col>
             <Col md={6}>
@@ -109,6 +152,9 @@ const CreateProductCard = ({ product }) => {
                 value={productData.price}
                 onChange={onPriceChange}
                 placeholder="Enter price"
+                error={productData.price === "" || productData.price <= "0"}
+                errorMessage="* Price is required"
+                instructions={"Price is Greater than 0"}
               />
             </Col>
           </Row>
@@ -117,6 +163,8 @@ const CreateProductCard = ({ product }) => {
             <Col md={6}>
               <AppLabel text={"Category:"} />
               <AppComboBox
+                name={"category"}
+                value={productData.category}
                 options={categoryNames}
                 onChange={onCategoryChange}
               />
@@ -129,12 +177,14 @@ const CreateProductCard = ({ product }) => {
                 value={productData.imageUrl}
                 onChange={onImageUrlChange}
                 placeholder="Enter image URL"
+                error={productData.imageUrl === ""}
+                errorMessage="* Image URL is required"
               />
             </Col>
           </Row>
 
           <Row>
-            <Col md={6}>
+            <Col md={6} style={{ maxHeight: "30vh", overflowY: "auto" }}>
               <AppLabel text={"Description:"} />
               <AppTextArea
                 label="Description"
@@ -143,25 +193,46 @@ const CreateProductCard = ({ product }) => {
                 onChange={onDescriptionChange}
                 placeholder="Enter product description"
                 rows={3}
+                error={productData.description === ""}
+                errorMessage="* Description is required"
               />
+              <Col md={12}>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <AppButton
+                    label="Save"
+                    onClick={handleSaveClick}
+                    disabled={false}
+                    variant="success"
+                    style={{ maxWidth: "100px" }}
+                  />
+                </div>
+              </Col>
             </Col>
             <Col md={6}>
-              <AppLabel text={"Bought By:"} />
-              <AppTable columns={columns} data={data} />
-            </Col>
-          </Row>
-
-          <Row>
-            <Col md={2} className="mt-3">
-              <div className="d-flex justify-content-end mt-4">
-                <AppButton
-                  label="Save"
-                  onClick={handleSaveClick}
-                  disabled={false}
-                  variant="success"
-                  style={{ maxWidth: "100px" }}
-                />
-              </div>
+              {data.length === 0 ? (
+                <p
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  No Purchases for this item yet
+                </p>
+              ) : (
+                <>
+                  <AppLabel text={"Bought By:"} />
+                  <div style={{ maxHeight: "20vh", overflowY: "auto" }}>
+                    <AppTable columns={columns} data={data} />
+                  </div>
+                </>
+              )}
             </Col>
           </Row>
         </Form>

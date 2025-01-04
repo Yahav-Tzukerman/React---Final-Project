@@ -8,22 +8,35 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import ordersService from "../../services/orders.service";
 import { useNavigate } from "react-router-dom";
+import productsService from "../../services/products.service";
 
 const Cart = () => {
   const app = useSelector((state) => state.app);
   const { cartItems } = useSelector((state) => state.cart);
+  const { user } = useSelector((state) => state.auth);
   const theme = app.darkMode ? appTheme.dark : appTheme.light;
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleOrder = () => {
-    cartItems.map((cartItem) => {
+    cartItems.forEach((cartItem) => {
       const order = {
         title: cartItem.product.title,
         quantity: cartItem.quantity,
         totalPrice: cartItem.product.price * cartItem.quantity,
         date: new Date().toLocaleDateString("en-GB"),
+        product: cartItem.product,
+        user: user,
       };
+
+      const updatedProduct = {
+        ...cartItem.product,
+        inStock: cartItem.product.inStock - cartItem.quantity,
+      };
+      productsService.updateProduct(
+        String(cartItem.product?.id),
+        updatedProduct
+      );
       ordersService.addOrder(order);
     });
     dispatch({ type: "CLEAR_CART" });

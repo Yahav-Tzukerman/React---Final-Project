@@ -44,7 +44,7 @@ const ProductList = () => {
         <Col xs={12} sm={12} md={12} lg={12} xl={12} style={{ width: "70%" }}>
           <ItemFilter
             categories={categoriesSelect}
-            maxPrice={maxPrice | 800}
+            maxPrice={maxPrice | 2000}
             onFilterChange={setFilters}
           />
         </Col>

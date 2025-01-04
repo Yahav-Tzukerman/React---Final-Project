@@ -9,7 +9,6 @@ import {
 // Save auth state on login
 function* saveAuthSaga(action) {
   try {
-    console.log("Saving auth:", action.payload);
     yield call(saveAuthToLocalStorage, action.payload); // Save to localStorage
   } catch (error) {
     console.error("Failed to save auth:", error);

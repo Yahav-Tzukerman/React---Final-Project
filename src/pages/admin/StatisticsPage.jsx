@@ -1,42 +1,32 @@
 import React from "react";
-import OrdersTableComp from "../../components/customer/OrdersTable";
 import appTheme from "../../styles/theme";
 import { useSelector } from "react-redux";
+import Statistics from "../../components/admin/Statistics";
 
-const OrdersPage = () => {
+const StatisticsPage = () => {
   const app = useSelector((state) => state.app);
   const theme = app.darkMode ? appTheme.dark : appTheme.light;
-
   const pageStyle = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    width: "100%",
-    height: "100vh",
+    justifyContent: "center",
     background: theme.colors.gradientBackground,
     color: theme.colors.textLight,
     fontFamily: theme.fontFamily,
   };
 
-  const headerStyle = {
-    margin: "3rem 0",
-    textAlign: "center",
-  };
-
-  const tableContainerStyle = {
+  const contentStyle = {
     width: "90%",
-    maxHeight: "60vh",
-    overflow: "auto",
   };
 
   return (
     <div style={pageStyle}>
-      <h1 style={headerStyle}>Orders</h1>
-      <div style={tableContainerStyle}>
-        <OrdersTableComp />
+      <div style={contentStyle}>
+        <Statistics />
       </div>
     </div>
   );
 };
 
-export default OrdersPage;
+export default StatisticsPage;

@@ -3,11 +3,13 @@ import { Card, Row, Col, Image } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import appTheme from "../../styles/theme";
 import AppCounter from "../common/AppCounter";
+import useOrders from "../../hooks/useOrders";
 
 const ProductCardComp = ({ product }) => {
   const app = useSelector((state) => state.app);
   const theme = app.darkMode ? appTheme.dark : appTheme.light;
   const cart = useSelector((state) => state.cart);
+  const productBought = useOrders().getProductBought(product.id);
   const dispatch = useDispatch();
 
   const cartItem = cart.cartItems.find(
@@ -30,6 +32,7 @@ const ProductCardComp = ({ product }) => {
     <Card
       className="my-3 p-3"
       style={{
+        minWidth: "50%",
         backgroundColor: theme.colors.cardBackground,
         color: theme.colors.textLight,
         fontFamily: theme.fontFamily,
@@ -53,7 +56,7 @@ const ProductCardComp = ({ product }) => {
             {product.description}
           </p>
           <div>Price: ${product.price}</div>
-          <div>In stock: {product.stock}</div>
+          <div>In stock: {product.inStock}</div>
           <div className="mt-3">
             <AppCounter
               counter={quantity}
@@ -75,17 +78,17 @@ const ProductCardComp = ({ product }) => {
             src={`/products/${product.imageUrl}.webp`}
             alt={`${product.title}-image`}
             style={{
-              width: "100%",
+              width: "12rem",
               height: "auto",
               borderRadius: "8px",
               objectFit: "cover",
-              maxHeight: "200px",
+              // maxHeight: "200px",
             }}
           />
         </Col>
 
         <Col xs={12} md={3} className="text-center">
-          <div>Bought: {product.bought || 43}</div>
+          <div>Bought: {productBought}</div>
         </Col>
       </Row>
     </Card>

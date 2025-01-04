@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import AppButton from "../common/AppButton";
 import appTheme from "../../styles/theme";
 import CreateProductCard from "./CreateProductCard";
 import productsService from "../../services/products.service";
+import AppErrorPopApp from "../common/AppErrorPopApp";
 
 const CreateProductListComp = () => {
   const app = useSelector((state) => state.app);
@@ -16,6 +17,11 @@ const CreateProductListComp = () => {
     category: "",
     imageUrl: "",
     description: "",
+  });
+  const [popup, setPopup] = useState({
+    show: false,
+    message: "",
+    type: "error",
   });
 
   useEffect(() => {
@@ -41,28 +47,47 @@ const CreateProductListComp = () => {
     });
   };
 
+  const showPopup = (message, type) => {
+    setPopup({
+      show: true,
+      message,
+      type,
+    });
+  };
+
+  const handleClosePopup = () => {
+    setPopup({
+      ...popup,
+      show: false,
+      message: "",
+    });
+  };
+
   return (
-    <Container style={{ marginTop: "2rem" }}>
+    <Container style={{ marginTop: "2rem", position: "relative" }}>
+      {popup.show && (
+        <AppErrorPopApp
+          handleClose={handleClosePopup}
+          show={popup.show}
+          label={popup.message}
+          variant={popup.type}
+        />
+      )}
       <Row>
-        <Card
+        <div
           style={{
             display: "flex",
             flexDirection: "column",
-            backgroundColor: theme.colors.cardBackground,
             color: theme.colors.textLight,
             fontFamily: theme.fontFamily,
             width: "100%",
             minHeight: "80vh",
-            padding: "2rem",
-            border: ".5px solid black",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-            marginTop: "1rem",
           }}
         >
-          <div style={{ flex: 1, overflowY: "auto", maxHeight: "70vh" }}>
+          <div style={{ flex: 1, overflowY: "auto", maxHeight: "80vh" }}>
             {products.map((product, index) => (
               <Col key={product.id || index} sm={12} md={12} lg={12}>
-                <CreateProductCard product={product} />
+                <CreateProductCard product={product} showPopup={showPopup} />
               </Col>
             ))}
           </div>
@@ -75,7 +100,7 @@ const CreateProductListComp = () => {
               />
             </Col>
           </Row>
-        </Card>
+        </div>
       </Row>
     </Container>
   );

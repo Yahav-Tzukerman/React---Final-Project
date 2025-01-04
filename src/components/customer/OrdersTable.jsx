@@ -3,7 +3,7 @@ import AppTable from "../common/AppTable";
 import useOrders from "../../hooks/useOrders";
 
 const OrdersTableComp = () => {
-  const orders = useOrders();
+  const { orders } = useOrders();
 
   const columns = [
     { header: "Title", accessor: "title" },

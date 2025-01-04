@@ -1,9 +1,19 @@
 import React from "react";
 import AppTable from "../common/AppTable";
 import useUsers from "../../hooks/useUsers";
+import useOrders from "../../hooks/useOrders";
 
 const CustomerTableComp = () => {
   const users = useUsers();
+  const {orders} = useOrders();
+
+  const productsBought = orders.map((order) => {
+    const product = order.product.title;
+    const qty = order.quantity;
+    const date = order.date;
+    const userId = order.user.userId;
+    return { product, qty, date, userId };
+  });
 
   const columns = [
     { header: "Full Name", accessor: "fullName" },
@@ -18,6 +28,10 @@ const CustomerTableComp = () => {
   ];
 
   const data = users.map((user) => {
+    const usrProductsBought = productsBought.filter(
+      (order) => order.userId === user.id
+    );
+
     const joinedAtDate = new Date(
       user.createdAt.seconds * 1000 + user.createdAt.nanoseconds / 1e6
     );
@@ -31,12 +45,23 @@ const CustomerTableComp = () => {
       fullName: `${user.firstName} ${user.lastName}`,
       joinedAt: formattedDate,
       productsTable: (
-        <AppTable columns={columnsInner} data={user.productsBought || []} />
+        <div style={{ maxHeight: "25vh", overflow: "auto" }}>
+          <AppTable columns={columnsInner} data={usrProductsBought || []} />
+        </div>
       ),
     };
   });
 
-  return <AppTable columns={columns} data={data} />;
+  return (
+    <div
+      style={{
+        maxHeight: "75vh",
+        overflow: "auto",
+      }}
+    >
+      <AppTable columns={columns} data={data} />
+    </div>
+  );
 };
 
 export default CustomerTableComp;

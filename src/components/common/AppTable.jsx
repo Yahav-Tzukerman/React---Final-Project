@@ -12,21 +12,26 @@ const AppTable = ({ columns, data }) => {
       striped
       bordered
       hover
-      responsive
       style={{
         marginTop: "20px",
         color: theme.colors.textLight,
         borderColor: theme.table.borderColor,
+        textAlign: "center",
       }}
     >
-      <thead>
+      <thead
+        style={{
+          position: "sticky",
+          top: 0,
+          zIndex: 1,
+        }}
+      >
         <tr>
           {columns.map((column, index) => (
             <th
               key={index}
               style={{
-                textAlign: "center",
-                backgroundColor: theme.table.headerBackground,
+                verticalAlign: "middle",
                 color: theme.table.headerTextColor,
                 borderColor: theme.table.borderColor,
               }}
@@ -43,7 +48,7 @@ const AppTable = ({ columns, data }) => {
               <td
                 key={colIndex}
                 style={{
-                  textAlign: "center",
+                  verticalAlign: "middle",
                   backgroundColor: theme.table.rowBackground,
                   color: theme.colors.textLight,
                   borderColor: theme.table.borderColor,

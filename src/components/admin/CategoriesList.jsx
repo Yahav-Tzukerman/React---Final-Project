@@ -6,12 +6,18 @@ import CategoriesService from "../../services/categories.service";
 import AppInput from "../common/AppInput";
 import AppButton from "../common/AppButton";
 import appTheme from "../../styles/theme";
+import AppErrorPopApp from "../common/AppErrorPopApp";
 
 const CategoriesList = () => {
   const app = useSelector((state) => state.app);
   const theme = app.darkMode ? appTheme.dark : appTheme.light;
   const [categories, setCategories] = useState([]);
   const [newCategory, setNewCategory] = useState("");
+  const [popup, setPopup] = useState({
+    show: false,
+    message: "",
+    type: "error",
+  });
 
   useEffect(() => {
     const unsubscribe = CategoriesService.getCategories((categoriesData) => {
@@ -25,11 +31,36 @@ const CategoriesList = () => {
       category: newCategory,
     };
     CategoriesService.addCategory(addCategory);
+    showPopup("Category added successfully!", "success");
     setNewCategory("");
   };
 
+  const showPopup = (message, type) => {
+    setPopup({
+      show: true,
+      message,
+      type,
+    });
+  };
+
+  const handleClosePopup = () => {
+    setPopup({
+      ...popup,
+      show: false,
+      message: "",
+    });
+  };
+
   return (
-    <Container style={{ marginTop: "2rem" }}>
+    <Container style={{ marginTop: "2rem", position: "relative" }}>
+      {popup.show && (
+        <AppErrorPopApp
+          handleClose={handleClosePopup}
+          show={popup.show}
+          label={popup.message}
+          variant={popup.type}
+        />
+      )}
       <Row>
         <Card
           style={{
@@ -50,7 +81,7 @@ const CategoriesList = () => {
           <div style={{ flex: 1, overflowY: "auto", maxHeight: "60vh" }}>
             {categories.map((category) => (
               <Col key={category.id} sm={12} md={12} lg={12}>
-                <CategoryCard category={category} />
+                <CategoryCard category={category} showPopup={showPopup} />
               </Col>
             ))}
           </div>

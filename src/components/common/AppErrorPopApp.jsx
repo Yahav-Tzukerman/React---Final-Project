@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+// AppErrorPopApp.jsx
+import React from "react";
 import { Toast } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import AppButton from "./AppButton";
 import appTheme from "../../styles/theme";
 
 const AppErrorPopApp = ({
@@ -22,10 +22,11 @@ const AppErrorPopApp = ({
   return (
     <div
       style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
+        position: "fixed",
+        top: "20%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        zIndex: 1050, // Ensure it's above other elements
       }}
     >
       <Toast
@@ -34,29 +35,28 @@ const AppErrorPopApp = ({
         delay={4000}
         autohide
         style={{
-          position: "fixed",
-          top: "20%",
-          left: "60%",
-          transform: "translate(-50%, -50%)",
-          zIndex: 1050,
           backgroundColor: variantColor,
           color: "white",
+          minWidth: "300px",
         }}
       >
-        <Toast.Header>
-          <strong
-            className="me-auto"
-            style={{
-              color: variantColor,
-            }}
-          >
-            Error
+        <Toast.Header
+          style={{
+            backgroundColor: variantColor,
+            color: "white",
+          }}
+        >
+          <strong className="me-auto">
+            {variant === "error"
+              ? "Error"
+              : variant === "warning"
+              ? "Warning"
+              : "Success"}
           </strong>
           <small>just now</small>
         </Toast.Header>
         <Toast.Body>
           <span
-            className="me-auto"
             style={{
               color: "white",
               fontWeight: "bold",

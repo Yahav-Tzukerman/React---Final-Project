@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Container, Row, Col, Card } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import AppButton from "../common/AppButton";
@@ -16,11 +16,27 @@ import { serverTimestamp } from "firebase/firestore";
 import AppErrorPopUp from "../common/AppErrorPopApp";
 import { useNavigate } from "react-router-dom";
 import appTheme from "../../styles/theme";
+import useUsers from "../../hooks/useUsers";
 
 const UserInfoComp = () => {
   const app = useSelector((state) => state.app);
   const theme = app.darkMode ? appTheme.dark : appTheme.light;
+  const userId = useSelector((state) => state.auth.user.userId);
+  const user = useUsers().filter((user) => user.id === userId)[0];
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        firstName: user.firstName || "",
+        lastName: user.lastName || "",
+        username: user.username || "",
+        password: "",
+        confirmPassword: "",
+        agreeTerms: user.agreeTerms || false,
+      });
+    }
+  }, [user]);
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -81,13 +97,11 @@ const UserInfoComp = () => {
       username: formData.username,
       password: formData.password,
       agreeTerms: formData.agreeTerms,
-      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
       isActive: true,
     };
 
     const response = await UserService.updateUser(user);
-
-    console.log("Response: ", response);
 
     if (response?.error) {
       // If error is "User already exists"

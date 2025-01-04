@@ -18,18 +18,20 @@ class ProductsService {
     try {
       const id = uuidv4();
       await setDoc(doc(db, "products", id), newProduct);
+      return "Product added successfully";
     } catch (error) {
-      console.error("Error adding product: ", error);
+      return `Error adding product: ${error}`;
     }
   };
 
   updateProduct = async (id, updatedProduct) => {
     const productDoc = doc(db, "products", id);
-    const obj = { id: id, product: updatedProduct };
+    const obj = { id: id, ...updatedProduct };
     try {
       await updateDoc(productDoc, obj);
+      return "Product updated successfully";
     } catch (error) {
-      console.error("Error updating product: ", error);
+      return `Error updating product: ${error}`;
     }
   };
 
@@ -49,10 +51,9 @@ class ProductsService {
         id: doc.id,
         ...doc.data(),
       }));
-      callback(productsData); // Trigger the callback with the data
+      callback(productsData);
     });
 
-    // Return the unsubscribe function to stop listening when needed
     return unsubscribe;
   };
 }

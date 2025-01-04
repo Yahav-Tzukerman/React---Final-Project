@@ -87,8 +87,6 @@ const SignupComp = () => {
 
     const response = await UserService.addUser(user);
 
-    console.log("Response: ", response);
-
     if (response?.error) {
       // If error is "User already exists"
       if (response.error === "User already exists") {

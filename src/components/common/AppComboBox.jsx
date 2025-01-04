@@ -3,7 +3,13 @@ import { Form } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import appTheme from "../../styles/theme";
 
-const AppComboBox = ({ name, value, onChange, options = [] }) => {
+const AppComboBox = ({
+  name,
+  value,
+  onChange,
+  options = [],
+  defaultOption,
+}) => {
   const app = useSelector((state) => state.app);
   const theme = app.darkMode ? appTheme.dark : appTheme.light;
   const [selected, setSelected] = useState(false);
@@ -49,6 +55,7 @@ const AppComboBox = ({ name, value, onChange, options = [] }) => {
           }}
           className="shadow-none"
         >
+          {defaultOption && <option value="">{defaultOption}</option>}
           {options.map((option, index) => (
             <option key={index} value={option}>
               {option}

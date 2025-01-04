@@ -86,7 +86,8 @@ class UserService {
           userId,
           username: userData.username,
           token: userCredential.user.accessToken,
-          role: userData.role, // Pass the role along with the response
+          role: userData.role,
+          agreeTerms: userData.agreeTerms,
         },
       };
     } catch (error) {

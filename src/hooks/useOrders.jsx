@@ -8,11 +8,19 @@ function useOrders() {
     const unsubscribe = OrderService.getOrders((ordersData) => {
       setOrders(ordersData);
     });
-
     return () => unsubscribe();
   }, []);
 
-  return orders;
+  function getProductBought(productId) {
+    return orders
+      .filter(
+        (order) => order.product.id === productId && order.user?.agreeTerms
+      )
+      .map((order) => order.quantity)
+      .reduce((a, b) => a + b, 0);
+  }
+
+  return { orders, getProductBought };
 }
 
 export default useOrders;

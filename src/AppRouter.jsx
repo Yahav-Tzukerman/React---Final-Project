@@ -11,6 +11,7 @@ import AdminProductsPage from "./pages/admin/AdminProductsPage";
 import ProductsPage from "./pages/customer/ProductsPage";
 import OrdersPage from "./pages/customer/OrdersPage";
 import UserInfoPage from "./pages/customer/UserInfoPage";
+import StatisticsPage from "./pages/admin/StatisticsPage";
 
 const AppRouter = () => {
   return (
@@ -44,6 +45,14 @@ const AppRouter = () => {
           element={
             <ProtectedRoute allowedRoles={["admin"]}>
               <CustomersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="statistics"
+          element={
+            <ProtectedRoute allowedRoles={["admin"]}>
+              <StatisticsPage />
             </ProtectedRoute>
           }
         />

@@ -16,6 +16,9 @@ const ProductsPage = () => {
 
   const containerStyle = {
     width: "48%",
+    backgroundColor: theme.colors.cartBackground,
+    color: theme.colors.textLight,
+    fontFamily: theme.fontFamily,
   };
 
   const mediaQueryStyle = {

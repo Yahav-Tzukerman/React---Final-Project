@@ -6,7 +6,7 @@ import AppInput from "../common/AppInput";
 import CategoryService from "../../services/categories.service";
 import appTheme from "../../styles/theme";
 
-const CategoryCard = ({ category }) => {
+const CategoryCard = ({ category, showPopup }) => {
   const app = useSelector((state) => state.app);
   const theme = app.darkMode ? appTheme.dark : appTheme.light;
 
@@ -35,10 +35,12 @@ const CategoryCard = ({ category }) => {
     CategoryService.updateCategory(category.id, newCategory);
     setNewCategory("");
     setIsEditing(false);
+    showPopup("Category updated successfully!", "success");
   };
 
   const handleDeleteClick = () => {
     CategoryService.deleteCategory(category.id);
+    showPopup("Category deleted successfully!", "success");
   };
 
   return (
