@@ -80,7 +80,7 @@ const CategoriesList = () => {
           <h1 style={{ textAlign: "center", margin: "1rem" }}>Categories</h1>
           <div style={{ flex: 1, overflowY: "auto", maxHeight: "60vh" }}>
             {categories.map((category) => (
-              <Col key={category.id} sm={12} md={12} lg={12}>
+              <Col key={category.id} sm={3} md={12} lg={12}>
                 <CategoryCard category={category} showPopup={showPopup} />
               </Col>
             ))}
@@ -95,7 +95,7 @@ const CategoriesList = () => {
                 }}
               />
             </Col>
-            <Col xs={3}>
+            <Col xs={12} sm={3}>
               <AppButton label="Add Category" onClick={handleAddCategory} />
             </Col>
           </Row>

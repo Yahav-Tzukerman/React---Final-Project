@@ -45,7 +45,8 @@ const CreateProductCard = ({ product, showPopup }) => {
     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
     padding: "1rem",
     margin: "1rem",
-    maxHeight: "60vh",
+    width: "100%",
+    overflowX: "hidden",
   };
 
   const columns = [
@@ -56,51 +57,23 @@ const CreateProductCard = ({ product, showPopup }) => {
 
   const data = orderedByData;
 
-  const onTitleChange = (e) => {
+  const onChange = (field) => (e) => {
     setProductData((prevData) => ({
       ...prevData,
-      title: e.target.value,
-    }));
-  };
-
-  const onPriceChange = (e) => {
-    setProductData((prevData) => ({
-      ...prevData,
-      price: e.target.value,
-    }));
-  };
-
-  const onCategoryChange = (e) => {
-    setProductData((prevData) => ({
-      ...prevData,
-      category: e.target.value,
-    }));
-  };
-
-  const onImageUrlChange = (e) => {
-    setProductData((prevData) => ({
-      ...prevData,
-      imageUrl: e.target.value,
-    }));
-  };
-
-  const onDescriptionChange = (e) => {
-    setProductData((prevData) => ({
-      ...prevData,
-      description: e.target.value,
+      [field]: e.target.value,
     }));
   };
 
   const handleSaveClick = async () => {
     if (
-      productData.title === "" ||
+      !productData.title ||
       productData.title === "Product Title" ||
-      productData.price === "" ||
-      productData.imageUrl === "" ||
+      !productData.price ||
+      !productData.imageUrl ||
       productData.imageUrl === "Product Image Url" ||
-      productData.description === "" ||
+      !productData.description ||
       productData.description === "Product Description" ||
-      productData.category === "" ||
+      !productData.category ||
       productData.category === "Product Category"
     ) {
       showPopup("Please fill in all fields", "error");
@@ -123,34 +96,30 @@ const CreateProductCard = ({ product, showPopup }) => {
     }
   };
 
-  const handleCloseErrorPopup = () => {
-    setPopup({ ...popup, show: false, message: "" });
-  };
-
   return (
     <Card style={cardStyle}>
       <Card.Body>
         <Form>
           <Row className="mb-3">
-            <Col md={6}>
+            <Col xs={12} md={6} className="mb-3">
               <AppLabel text={"Title:"} />
               <AppInput
                 label="Title"
                 type="text"
                 value={productData.title}
-                onChange={onTitleChange}
+                onChange={onChange("title")}
                 placeholder="Enter product title"
                 error={productData.title === ""}
                 errorMessage="* Title is required"
               />
             </Col>
-            <Col md={6}>
+            <Col xs={12} md={6} className="mb-3">
               <AppLabel text={"Price:"} />
               <AppInput
                 label="Price"
                 type="number"
                 value={productData.price}
-                onChange={onPriceChange}
+                onChange={onChange("price")}
                 placeholder="Enter price"
                 error={productData.price === "" || productData.price <= "0"}
                 errorMessage="* Price is required"
@@ -160,22 +129,22 @@ const CreateProductCard = ({ product, showPopup }) => {
           </Row>
 
           <Row className="mb-3">
-            <Col md={6}>
+            <Col xs={12} md={6} className="mb-3">
               <AppLabel text={"Category:"} />
               <AppComboBox
                 name={"category"}
                 value={productData.category}
                 options={categoryNames}
-                onChange={onCategoryChange}
+                onChange={onChange("category")}
               />
             </Col>
-            <Col md={6}>
+            <Col xs={12} md={6} className="mb-3">
               <AppLabel text={"Link to Pic:"} />
               <AppInput
                 label="Link to Pic"
                 name="imageUrl"
                 value={productData.imageUrl}
-                onChange={onImageUrlChange}
+                onChange={onChange("imageUrl")}
                 placeholder="Enter image URL"
                 error={productData.imageUrl === ""}
                 errorMessage="* Image URL is required"
@@ -184,47 +153,31 @@ const CreateProductCard = ({ product, showPopup }) => {
           </Row>
 
           <Row>
-            <Col md={6} style={{ maxHeight: "30vh", overflowY: "auto" }}>
+            <Col xs={12} md={6} className="mb-3">
               <AppLabel text={"Description:"} />
               <AppTextArea
                 label="Description"
                 name="description"
                 value={productData.description}
-                onChange={onDescriptionChange}
+                onChange={onChange("description")}
                 placeholder="Enter product description"
                 rows={3}
                 error={productData.description === ""}
                 errorMessage="* Description is required"
               />
-              <Col md={12}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <AppButton
-                    label="Save"
-                    onClick={handleSaveClick}
-                    disabled={false}
-                    variant="success"
-                    style={{ maxWidth: "100px" }}
-                  />
-                </div>
-              </Col>
+              <div className="d-flex justify-content-end mt-3">
+                <AppButton
+                  label="Save"
+                  onClick={handleSaveClick}
+                  disabled={false}
+                  variant="success"
+                  style={{ maxWidth: "100%", width: "100px" }}
+                />
+              </div>
             </Col>
-            <Col md={6}>
+            <Col xs={12} md={6}>
               {data.length === 0 ? (
-                <p
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  No Purchases for this item yet
-                </p>
+                <p className="text-center">No Purchases for this item yet</p>
               ) : (
                 <>
                   <AppLabel text={"Bought By:"} />
